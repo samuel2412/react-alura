@@ -3,6 +3,7 @@ import api from '../../services/api';
 import PubSub from 'pubsub-js';
 import InputCustomizado from '../InputCustomizado/index';
 import ButtonCustomizado from '../ButtonCustomizado/index';
+import TratadorErros from '../../TratadorErros';
 import '../../css/pure-min.css';
 import '../../css/side-menu.css'
 
@@ -14,6 +15,7 @@ class FormularioAutor extends Component {
         this.setNome = this.setNome.bind(this);
         this.setEmail = this.setEmail.bind(this);
         this.setSenha = this.setSenha.bind(this);
+        this.enviaForm = this.enviaForm.bind(this);
 
     }
 
@@ -28,17 +30,27 @@ class FormularioAutor extends Component {
     }
 
 
-    enviaForm(evento) {
+    enviaForm = async (evento) => {
         evento.preventDefault();
-        const teste = { nome: this.state.nome, email: this.state.email, senha: this.state.senha };
-        console.log(teste);
+
+        PubSub.publish("limpa-erros",{});
+
         api.post(`/autores`, { nome: this.state.nome, email: this.state.email, senha: this.state.senha })
-            .then(res => {
-                PubSub.publish('nova-lista-autores', res.data);
-                //this.setState({ autores: res.data });
-                console.log(res);
-                console.log(res.data);
+            .then(response => {
+                console.log('👉 Returned data:', response);
+                PubSub.publish('nova-lista-autores', response.data);
+                this.setState({ nome: '', email: '', senha: '' });
+
+              
+                    
+                 
             })
+            .catch(error => {
+                console.log(`😱 Axios request failed: ${error.response}`);
+                console.log(error.response.data.errors)
+                new TratadorErros().publicaErros(error.response.data.errors);
+            });
+
     }
 
     render() {
@@ -48,7 +60,7 @@ class FormularioAutor extends Component {
 
 
                     <InputCustomizado id="nome" label="Nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome}></InputCustomizado>
-                    <InputCustomizado id="email" label="Email" type="email" name="nome" value={this.state.email} onChange={this.setEmail}></InputCustomizado>
+                    <InputCustomizado id="email" label="Email" type="email" name="email" value={this.state.email} onChange={this.setEmail}></InputCustomizado>
                     <InputCustomizado id="senha" label="Senha" type="password" name="senha" value={this.state.senha} onChange={this.setSenha}></InputCustomizado>
 
                     <ButtonCustomizado type="submit" className="pure-button pure-button-primary" name="Gravar"></ButtonCustomizado>
@@ -69,7 +81,7 @@ class ListaAutores extends Component {
     componentDidMount() {
         this.loadAutores();
 
-        PubSub.subscribe('nova-lista-autores',function(topico,novaLista){
+        PubSub.subscribe('nova-lista-autores', function (topico, novaLista) {
             this.setState({ autores: novaLista })
         }.bind(this));
     };
