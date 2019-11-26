@@ -41,9 +41,6 @@ class FormularioAutor extends Component {
                 PubSub.publish('nova-lista-autores', response.data);
                 this.setState({ nome: '', email: '', senha: '' });
 
-
-
-
             })
             .catch(error => {
                 console.log(`😱 Axios request failed: ${error.response}`);
