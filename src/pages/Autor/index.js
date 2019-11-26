@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import api from '../../services/api';
 import PubSub from 'pubsub-js';
-import InputCustomizado from '../InputCustomizado/index';
-import ButtonCustomizado from '../ButtonCustomizado/index';
+import InputCustomizado from '../../componentes/InputCustomizado/index';
+import ButtonCustomizado from '../../componentes/ButtonCustomizado/index';
 import TratadorErros from '../../TratadorErros';
 import '../../css/pure-min.css';
 import '../../css/side-menu.css'
@@ -33,7 +33,7 @@ class FormularioAutor extends Component {
     enviaForm = async (evento) => {
         evento.preventDefault();
 
-        PubSub.publish("limpa-erros",{});
+        PubSub.publish("limpa-erros", {});
 
         api.post(`/autores`, { nome: this.state.nome, email: this.state.email, senha: this.state.senha })
             .then(response => {
@@ -41,9 +41,9 @@ class FormularioAutor extends Component {
                 PubSub.publish('nova-lista-autores', response.data);
                 this.setState({ nome: '', email: '', senha: '' });
 
-              
-                    
-                 
+
+
+
             })
             .catch(error => {
                 console.log(`😱 Axios request failed: ${error.response}`);
@@ -128,8 +128,13 @@ export default class AutorBox extends Component {
     render() {
         return (
             <div>
-                <FormularioAutor />
-                <ListaAutores />
+                <div className="header">
+                    <h1>Cadastro de autores</h1>
+                </div>
+                <div>
+                    <FormularioAutor />
+                    <ListaAutores />
+                </div>
             </div>
         );
     }

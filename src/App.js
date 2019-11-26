@@ -13,14 +13,14 @@ export default class App extends Component {
         return (
             <div id="layout">
 
-                <a href="" id="menuLink" className="menu-link">
+                <a href="#" id="menuLink" className="menu-link">
 
                     <span></span>
                 </a>
 
                 <div id="menu">
                     <div className="pure-menu">
-                        <Link to="/" className="pure-menu-heading" >Company</Link>
+                        <a href="www.github.com/samuel2412" className="pure-menu-heading" >Company</a>
 
                         <ul className="pure-menu-list">
                             <li className="pure-menu-item">
@@ -40,11 +40,9 @@ export default class App extends Component {
                 </div>
 
                 <div id="main">
-                    <div className="header">
-                        <h1>Bem vindo a aplicação</h1>
-                    </div>
+                    
                     <div className="content" id="content">
-                       
+                       { this.props.children }
                     </div>
                 </div>
             </div>

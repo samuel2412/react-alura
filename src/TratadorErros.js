@@ -1,4 +1,3 @@
-import React from 'react';
 import PubSub from 'pubsub-js'
 
 export default class TratadorErros{
