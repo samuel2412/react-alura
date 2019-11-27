@@ -30,6 +30,8 @@ class FormularioLivro extends Component {
     enviaForm = async (evento) => {
         evento.preventDefault();
 
+        PubSub.publish("limpa-erros", {});
+
         api.post(`/livros`, { titulo: this.state.titulo, preco: this.state.preco, autorId: this.state.autorId })
             .then(response => {
                 console.log('👉 Returned data:', response);
