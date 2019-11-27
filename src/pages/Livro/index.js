@@ -10,23 +10,15 @@ class FormularioLivro extends Component {
     constructor() {
         super();
         this.state = { titulo: '', preco: '', autorId: '' }
-        this.setTitulo = this.setTitulo.bind(this);
-        this.setPreco = this.setPreco.bind(this);
-        this.setAutorId = this.setAutorId.bind(this);
+        
     }
 
-    setTitulo(evento) {
-        this.setState({ titulo: evento.target.value });
-    }
+    salvaAlteracao(nomeInput,evento){
+        var campoSendoAlterado = [];
+        campoSendoAlterado[nomeInput] = evento.target.value;
+        this.setState(campoSendoAlterado);
+      }
 
-    setPreco(evento) {
-        this.setState({ preco: evento.target.value });
-    }
-
-    setAutorId(evento) {
-        console.log(evento.target.value);
-        this.setState({ autorId: evento.target.value });
-    }
     enviaForm = async (evento) => {
         evento.preventDefault();
 
@@ -53,12 +45,12 @@ class FormularioLivro extends Component {
                 <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm.bind(this)} method="post">
 
 
-                    <InputCustomizado id="titulo" label="Título" type="text" name="titulo" value={this.state.titulo} onChange={this.setTitulo}></InputCustomizado>
-                    <InputCustomizado step=".01" id="preco" label="Preço" type="number" name="preco" value={this.state.preco} onChange={this.setPreco}></InputCustomizado>
+                    <InputCustomizado id="titulo" label="Título" type="text" name="titulo" value={this.state.titulo} onChange={this.salvaAlteracao.bind(this,'titulo')}></InputCustomizado>
+                    <InputCustomizado step=".01" id="preco" label="Preço" type="number" name="preco" value={this.state.preco} onChange={this.salvaAlteracao.bind(this,'preco')}></InputCustomizado>
 
                     <div className="pure-control-group">
                         <label>Autor </label>
-                        <select value={this.state.autorId} name="autorId" onChange={this.setAutorId}>
+                        <select value={this.state.autorId} name="autorId" onChange={this.salvaAlteracao.bind(this,'autorId')}>
                             <option value="">Selecione</option>
                             {
                                 this.props.autores.map(autor => (
